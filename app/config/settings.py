@@ -11,20 +11,27 @@ load_dotenv(dotenv_path=env_path)
 
 class Settings(BaseSettings):
 
-    # App
-    APP_NAME:  str = os.environ.get("APP_NAME", "FastAPI")
-    DEBUG: bool = bool(os.environ.get("DEBUG", False))
+    APP_NAME: str = "FastAPI"
+    DEBUG: bool = False
 
-    # MySql Database Config
-    MYSQL_HOST: str = os.environ.get("MYSQL_HOST", 'localhost')
-    MYSQL_USER: str = os.environ.get("MYSQL_USER", 'root')
-    MYSQL_PASS: str = os.environ.get("MYSQL_PASSWORD", 'secret')
-    MYSQL_PORT: int = int(os.environ.get("MYSQL_PORT", 3306))
-    MYSQL_DB: str = os.environ.get("MYSQL_DB", 'fastapi')
-    DATABASE_URI: str = f"mysql+pymysql://{MYSQL_USER}:%s@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}" % quote_plus(MYSQL_PASS)
+    # MySQL Database Config
+    MYSQL_HOST: str = "mysql"
+    MYSQL_USER: str = "root"
+    MYSQL_PASSWORD: str = "secret"
+    MYSQL_PORT: int = 3306
+    MYSQL_DB: str = "fastapi"
+    
+    @property
+    def DATABASE_URI(self) -> str:
+        return f"mysql+pymysql://{quote_plus(self.MYSQL_USER)}:{quote_plus(self.MYSQL_PASSWORD)}@{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DB}"
+
 
     # App Secret Key
-    SECRET_KEY: str = os.environ.get("SECRET_KEY", "8deadce9449770680910741063cd0a3fe0acb62a8978661f421bbcbb66dc41f1")
+    SECRET_KEY: str = os.environ.get("SECRET_KEY", "changeme")
+
+    # class Config:
+    #     env_file = ".env"
+    #     env_file_encoding = "utf-8"
 
 
 @lru_cache()
